@@ -71,16 +71,14 @@ def _send_ack_req(channel, method, properties, key, value):
 
 
 def _worker():
-	try:
-		connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-		channel = connection.channel()
-		channel.queue_declare(queue=A_QUEUE)
-		channel.basic_qos(prefetch_count=1)
-		channel.basic_consume(_get_callback, queue=A_QUEUE)
-		while started:
-			connection.process_data_events(time_limit=1)
-	except KeyboardInterrupt:
-		pass
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    channel = connection.channel()
+    channel.queue_declare(queue=A_QUEUE)
+    channel.basic_qos(prefetch_count=1)
+    channel.basic_consume(_get_callback, queue=A_QUEUE)
+    while started:
+        connection.process_data_events(time_limit=1)
+    connection.close()
 
 
 def _start_listener():
